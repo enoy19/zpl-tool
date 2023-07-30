@@ -41,6 +41,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"neat-csv": "^7.0.0",
 		"serialport": "^11.0.1",
 		"throttle-debounce": "^5.0.0"
 	}

@@ -9,6 +9,7 @@
 	import type { PageData } from './$types';
 	import { throttle } from 'throttle-debounce';
 	import { onMount } from 'svelte';
+	import { FileDropzone } from '@skeletonlabs/skeleton';
 
 	export let data: PageData;
 	$: ({ templates } = data);
@@ -17,6 +18,7 @@
 
 	let variables: Variables = {};
 	let renderPromise: Promise<string>;
+	let csvFiles: FileList;
 
 	$: zpl = renderZpl(template.zpl, variables);
 
@@ -62,6 +64,33 @@
 				<input type="hidden" name="zpl" value={zpl} />
 				<button type="submit" class="btn variant-filled-primary w-full">Print</button>
 			</form>
+			<hr class="my-3" />
+			<div class="mt-3">
+				<h3 class="h3">Bulk</h3>
+				<p>Drop CSV</p>
+				<form
+					action="?/printBulk"
+					method="post"
+					enctype="multipart/form-data"
+					use:enhance={() => {
+						return async ({ update }) => {
+							update({ reset: false });
+						};
+					}}
+				>
+					<FileDropzone name="csv" bind:files={csvFiles} accept=".csv" required />
+
+					{#if csvFiles && csvFiles.length > 0}
+						<div transition:slide>
+							<span class="font-bold">{csvFiles.item(0)?.name}</span>
+						</div>
+					{/if}
+
+					<button type="submit" class="btn variant-filled-warning w-full mt-3"
+						>Print{csvFiles && csvFiles.length > 0 ? `: ${csvFiles.item(0)?.name}` : ''}</button
+					>
+				</form>
+			</div>
 		</div>
 		<div class="w-full">
 			<h2 class="h2 mb-4">Preview</h2>

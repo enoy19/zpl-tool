@@ -7,16 +7,18 @@
 	import { AppBar } from '@skeletonlabs/skeleton';
 </script>
 
-<AppShell>
-	<AppBar slot="header">ZPL-Tool</AppBar>
-	<slot name="pageHeader" slot="pageHeader"/>
+<div class="mb-32">
+	<AppShell>
+		<AppBar slot="header"><a href="/">ZPL-Tool</a></AppBar>
+		<slot name="pageHeader" slot="pageHeader"/>
+		
+		<slot name="sidebarLeft" slot="sidebarLeft" />
+		
+		<slot />
+		
+		<slot name="sidebarRight" slot="sidebarRight"/>
 	
-	<slot name="sidebarLeft" slot="sidebarLeft" />
-	
-	<slot />
-	
-	<slot name="sidebarRight" slot="sidebarRight"/>
-
-	<slot name="pageFooter" slot="pageFooter" />
-	<slot name="footer" slot="footer" />
-</AppShell>
+		<slot name="pageFooter" slot="pageFooter" />
+		<slot name="footer" slot="footer" />
+	</AppShell>
+</div>
