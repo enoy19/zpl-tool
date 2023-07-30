@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - PUBLIC_BASE_URL=http://localhost:3000
+      - VITE_PUBLIC_BASE_URL=http://localhost:3000
+      - ORIGIN=http://localhost:3000
+      - PROTOCOL_HEADER=x-forwarded-proto
+      - HOST_HEADER=x-forwarded-host
+      - TZ='Etc/UTC'
+    volumes:
+      - /dev/rfcomm0:/dev/rfcomm0
