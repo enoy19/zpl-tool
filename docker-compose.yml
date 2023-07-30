@@ -13,3 +13,5 @@ services:
       - TZ='Etc/UTC'
     devices:
       - /dev/rfcomm0:/dev/rfcomm0
+    volumes:
+      - ./templates.json:/app/templates.json
