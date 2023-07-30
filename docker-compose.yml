@@ -10,5 +10,5 @@ services:
       - PROTOCOL_HEADER=x-forwarded-proto
       - HOST_HEADER=x-forwarded-host
       - TZ='Etc/UTC'
-    volumes:
+    devices:
       - /dev/rfcomm0:/dev/rfcomm0
