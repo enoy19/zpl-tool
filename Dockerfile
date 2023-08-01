@@ -10,6 +10,7 @@ ENV VITE_PUBLIC_BASE_URL=http://localhost:3000
 ENV ORIGIN=http://localhost:3000
 ENV PROTOCOL_HEADER=x-forwarded-proto
 ENV HOST_HEADER=x-forwarded-host
+ENV SECRET_DATA_PATH=./data
 ENV TZ='Etc/UTC'
 
 RUN npm run build

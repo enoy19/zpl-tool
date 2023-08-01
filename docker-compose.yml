@@ -11,7 +11,9 @@ services:
       - PROTOCOL_HEADER=x-forwarded-proto
       - HOST_HEADER=x-forwarded-host
       - TZ='Etc/UTC'
-    devices:
-      - /dev/rfcomm0:/dev/rfcomm0
+      - SECRET_DATA_PATH=./data
+    # add rfcomm device for bluetooth support
+    # devices:
+    #  - /dev/rfcomm0:/dev/rfcomm0
     volumes:
-      - ./templates.json:/app/templates.json
+      - ./data:/app/data
