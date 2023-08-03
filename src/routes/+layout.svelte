@@ -3,13 +3,21 @@
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
 	import '../app.postcss';
 
-	import { AppShell } from '@skeletonlabs/skeleton';
+	import { AppShell, Modal, Toast } from '@skeletonlabs/skeleton';
 	import { AppBar } from '@skeletonlabs/skeleton';
 </script>
 
+<Toast position="br"/>
+<Modal />
+
 <div class="mb-32">
 	<AppShell>
-		<AppBar slot="header"><a href="/">ZPL-Tool</a></AppBar>
+		<AppBar slot="header">
+			<a href="/">ZPL-Tool</a>
+			<svelte:fragment slot="trail">
+				<a href="/printers">Printers</a>
+			</svelte:fragment>
+		</AppBar>
 		<slot name="pageHeader" slot="pageHeader"/>
 		
 		<slot name="sidebarLeft" slot="sidebarLeft" />

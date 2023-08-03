@@ -1,13 +1,16 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
+	import Preview from '$lib/components/Preview.svelte';
+	import VariableInputs from '$lib/components/VariableInputs.svelte';
+	import { densities } from '$lib/constants';
 	import { getVariableNames, renderZplToPngBase64 } from '$lib/labelary';
-	import { densities, type Density, type Variables } from '$lib/types';
-	import { ProgressRadial } from '@skeletonlabs/skeleton';
-	import { fade, slide } from 'svelte/transition';
+	import type { Density, Variables } from '$lib/types';
+	import { slide } from 'svelte/transition';
 	import { throttle } from 'throttle-debounce';
 	import type { PageData } from './$types';
-	import { enhance } from '$app/forms';
-	import VariableInputs from '$lib/components/VariableInputs.svelte';
-	import Preview from '$lib/components/Preview.svelte';
+	import TemplateList from '$lib/components/TemplateList.svelte';
+	import type { ActionResult } from '@sveltejs/kit';
+	import { toastStore } from '@skeletonlabs/skeleton';
 
 	export let data: PageData;
 	$: ({ templates } = data);
@@ -49,21 +52,44 @@
 		currentTemplate = templateName;
 		dataChanged();
 	}
+
+	function handleFormResult(result: ActionResult) {
+		if (result.type === 'failure') {
+			toastStore.trigger({
+				message: `[${result.status}] Template save failed: ${result?.data?.message}`,
+				autohide: true,
+				background: 'variant-filled-error'
+			});
+		} else if(result.type === 'success') {
+			toastStore.trigger({
+				message: `Template saved!`,
+				autohide: true,
+				background: 'variant-filled-success'
+			});
+		}
+	}
 </script>
 
 <div class="container mx-auto flex justify-center items-center">
 	<div class="flex flex-col md:flex-row w-full gap-3 mt-4 mx-2">
 		<div class="w-full">
+			<div class="card p-4 mb-6">
+				<h3 class="h3 mb-2">Templates</h3>
+				<div class="flex flex-col gap-2">
+					<TemplateList {templateNames} on:templateSelected={(e) => loadTemplate(e.detail)}/>
+				</div>
+			</div>
+			<h2 class="h2 mb-4">Editor</h2>
 			<form
 				method="post"
 				action="?/saveTemplate"
 				use:enhance={() => {
-					return async ({ update }) => {
+					return async ({ update, result }) => {
 						update({ reset: false });
+						handleFormResult(result);
 					};
 				}}
 			>
-				<h2 class="h2 mb-4">ZPL</h2>
 				<textarea
 					bind:value={zpl}
 					class="textarea"
@@ -124,28 +150,10 @@
 					</div>
 				{/if}
 			</form>
-			<div class="card p-4 mt-6">
-				<h3 class="h3 mb-2">Templates</h3>
-				<div class="flex flex-col gap-2">
-					{#each templateNames as templateName, i (`${i}_${templateName}`)}
-						<div class="flex gap-1 w-full">
-							<a href={`/${templateName}`} class="btn variant-ghost-tertiary">Print</a>
-							<button
-								class="btn variant-ghost-secondary w-full"
-								on:click={() => loadTemplate(templateName)}>{templateName}</button
-							>
-							<form method="post" action="?/deleteTemplate" use:enhance>
-								<input type="hidden" name="templateName" value={templateName} />
-								<button type="submit" class="btn variant-ghost-error">Delete</button>
-							</form>
-						</div>
-					{/each}
-				</div>
-			</div>
 		</div>
 		<div class="w-full">
 			<h2 class="h2 mb-4">Preview</h2>
-			<Preview {renderPromise}/>
+			<Preview {renderPromise} />
 		</div>
 	</div>
 </div>

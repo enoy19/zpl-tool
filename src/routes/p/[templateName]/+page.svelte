@@ -9,12 +9,15 @@
 	import type { PageData } from './$types';
 	import { throttle } from 'throttle-debounce';
 	import { onMount } from 'svelte';
-	import { FileDropzone } from '@skeletonlabs/skeleton';
+	import { FileDropzone, toastStore } from '@skeletonlabs/skeleton';
+	import PrintButton from '$lib/components/PrintButton.svelte';
+	import type { ActionResult } from '@sveltejs/kit';
 
 	export let data: PageData;
-	$: ({ templates } = data);
+	$: ({ templates, printers } = data);
 	$: template = templates[$page.params.templateName];
 	$: variableNames = getVariableNames(template.zpl);
+	$: csvHeaders = btoa(variableNames.map((v) => `"${v}"`).join(';') + '\n');
 
 	let variables: Variables = {};
 	let renderPromise: Promise<string>;
@@ -40,6 +43,16 @@
 		);
 	}
 
+	function handleFormResult(result: ActionResult) {
+		if (result.type === 'failure') {
+			toastStore.trigger({
+				message: `[${result.status}] Print failed: ${result?.data?.message}`,
+				autohide: true,
+				background: 'variant-filled-error'
+			});
+		}
+	}
+
 	onMount(() => debouncedRender());
 </script>
 
@@ -56,29 +69,37 @@
 				method="post"
 				action="?/print"
 				use:enhance={() => {
-					return async ({ update }) => {
+					return async ({ update, result }) => {
 						update({ reset: false });
+						handleFormResult(result);
 					};
 				}}
 			>
 				<input type="hidden" name="zpl" value={zpl} />
-				<button type="submit" class="btn variant-filled-primary w-full">Print</button>
+				<PrintButton {printers} />
 			</form>
 			<hr class="my-3" />
 			<div class="mt-3">
 				<h3 class="h3">Bulk</h3>
-				<p>Drop CSV</p>
+				<a
+					class="btn btn-sm variant-filled-warning"
+					href={`data:text/csv;base64,${csvHeaders}`}
+					download={$page.params.templateName + '.csv'}>Download CSV Template</a
+				>
+				<p class="mt-4">Drop CSV</p>
+				<small>Delimiter: Semicolon ( ; ) - Every Cell in double quotes ( " )</small>
 				<form
 					action="?/printBulk"
 					method="post"
 					enctype="multipart/form-data"
 					use:enhance={() => {
-						return async ({ update }) => {
+						return async ({ update, result }) => {
 							update({ reset: false });
+							handleFormResult(result);
 						};
 					}}
 				>
-					<FileDropzone name="csv" bind:files={csvFiles} accept=".csv" required />
+					<FileDropzone class="mb-6" name="csv" bind:files={csvFiles} accept=".csv" required />
 
 					{#if csvFiles && csvFiles.length > 0}
 						<div transition:slide>
@@ -86,9 +107,13 @@
 						</div>
 					{/if}
 
-					<button type="submit" class="btn variant-filled-warning w-full mt-3"
-						>Print{csvFiles && csvFiles.length > 0 ? `: ${csvFiles.item(0)?.name}` : ''}</button
-					>
+					<PrintButton
+						{printers}
+						buttonLabel={`Print${
+							csvFiles && csvFiles.length > 0 ? `: ${csvFiles.item(0)?.name}` : ''
+						}`}
+						buttonColor="variant-filled-warning"
+					/>
 				</form>
 			</div>
 		</div>

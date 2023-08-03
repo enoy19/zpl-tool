@@ -1,4 +1,5 @@
-export const densities = [6, 8, 12, 24] as const;
+import type { densities, printerTypes } from './constants';
+
 export type Densities = (typeof densities)[number];
 
 export type Density = `${Densities}dpmm`;
@@ -7,9 +8,30 @@ export type Variables = Record<string, any>;
 export type Template = {
 	name: string;
 	zpl: string;
-    width: number;
-    height: number;
-    density: Density;
+	width: number;
+	height: number;
+	density: Density;
 };
 
 export type Templates = Record<string, Template>;
+
+export type PrinterType = (typeof printerTypes)[number];
+
+export type PrinterOptions<T extends PrinterType> = T extends 'serial'
+	? {
+			path: string;
+			baudRate: number;
+	  }
+	: T extends 'tcp'
+	? {
+			host: string;
+			port: number;
+	  }
+	: never;
+
+export type PrinterConfig<T extends PrinterType> = {
+	type: T;
+	options: PrinterOptions<T>;
+};
+
+export type PrinterConfigs = Record<string, PrinterConfig<any>>;

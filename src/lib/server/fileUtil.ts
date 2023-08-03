@@ -19,7 +19,7 @@ async function createEmptyJsonFile(path: string) {
 	await storeObject({}, path);
 }
 
-async function fileExists(path: string) {
+export async function fileExists(path: string) {
 	try {
 		await fs.access(getDataFilePathFor(path));
 		return true;
