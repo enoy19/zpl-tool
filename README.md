@@ -1,22 +1,89 @@
-# create-svelte
+# zpl-tool
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+zpl-tool is a webapp designed for managing multiple ZPL templates.
+It provides an easy-to-use interface for managing ZPL templates with the ability to insert variables such as `${MY_VARIABLE}` directly into your templates.
+zpl-tool features a live preview of the templates (powered by [labelary.com](https://labelary.com)), which automatically updates as you develop your template.
 
-## Creating a project
+Besides template management, zpl-tool also provides support for managing multiple printers, including serial and tcp network printers.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Features
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+- **📄 Manage Multiple ZPL Templates**: Easily handle multiple ZPL templates with variable support.
+- **🔍 Live Template Preview**: Generates a live preview of the templates with automatic updates when testing variables.
+- **🖨️ Support for Multiple Printers**: Manage multiple printers, including Serial and TCP printers.
+- **🔢 Bulk Printing**: Efficiently print in bulk by providing a CSV file.
 
-# create a new project in my-app
-npm create svelte@latest my-app
+## Quick Start
+
+### **Run zpl-tool using Docker / Docker Compose**
+<details>
+<summary><strong>Using docker-compose:</strong></summary>
+
+Create a file named `docker-compose.yml` in your directory and paste the following content:
+
+```yaml
+version: '3'
+
+services:
+    zpl-tool:
+    image: ghcr.io/enoy19/zpl-tool:main
+    ports:
+        - "3000:3000"
+    volumes:
+        - "./data:/app/data"
 ```
+
+After saving the file, run the following command to start zpl-tool:
+
+```sh
+docker compose up
+```
+
+zpl-tool will be available at [http://localhost:3000](http://localhost:3000).
+</details>
+
+<details>
+<summary><strong>Using docker run:</strong></summary>
+
+You can use the following `docker run` command:
+
+```sh
+docker run -p 3000:3000 -v $(pwd)/data:/app/data ghcr.io/enoy19/zpl-tool:main
+```
+
+After running this command, zpl-tool will be available at [http://localhost:3000](http://localhost:3000).
+</details>
+
+## Usage
+
+### Managing ZPL Templates
+
+- **Create a New Template**: Start typing into the textarea below `Editor`
+- **Insert Variables**: Insert variables into your template. Format: `${VARIABLE_NAME}`. The variables will automatically be available in the `Variables` section.
+- **Live Preview**: When you edit your template or the values of your variables, the preview updates automatically.
+
+<video controls autoplay loop muted>
+  <source src="assets/zpl-tool-templates.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+### Managing Printers & Printing
+
+- **Navigate to Printers**: Click `Printers` in the navigation bar
+- **Add a Printer**: Add a serial or tcp printer by entering the configuration and saving.
+
+  ![Printers](./assets/printers.jpg)
+- **Print**: 
+  - Navigate back the the home page.
+  - click on `Print` on one of your templates.
+  - Select your printer in the dropdown next to the `Print` button
+  - click `Print`
+
+    ![Print](./assets/print.jpg)
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've cloned the repository and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash
 npm run dev
