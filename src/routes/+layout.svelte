@@ -13,7 +13,7 @@
 <div class="mb-32">
 	<AppShell>
 		<AppBar slot="header">
-			<a href="/">ZPL-Tool</a>
+			<a href="/">zpl-tool</a>
 			<svelte:fragment slot="trail">
 				<a href="/printers">Printers</a>
 			</svelte:fragment>
