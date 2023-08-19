@@ -62,10 +62,7 @@ After running this command, zpl-tool will be available at [http://localhost:3000
 - **Insert Variables**: Insert variables into your template. Format: `${VARIABLE_NAME}`. The variables will automatically be available in the `Variables` section.
 - **Live Preview**: When you edit your template or the values of your variables, the preview updates automatically.
 
-<video controls autoplay loop muted>
-  <source src="assets/zpl-tool-templates.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+  ![Printers](./assets/zpl-tool-templates.gif)
 
 ### Managing Printers & Printing
 
