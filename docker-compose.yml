@@ -4,14 +4,6 @@ services:
     image: ghcr.io/enoy19/zpl-tool:main
     ports:
       - 3000:3000
-    environment:
-      - PUBLIC_BASE_URL=http://localhost:3000
-      - VITE_PUBLIC_BASE_URL=http://localhost:3000
-      - ORIGIN=http://localhost:3000
-      - PROTOCOL_HEADER=x-forwarded-proto
-      - HOST_HEADER=x-forwarded-host
-      - TZ='Etc/UTC'
-      - SECRET_DATA_PATH=./data
     # add rfcomm device for bluetooth support
     # devices:
     #  - /dev/rfcomm0:/dev/rfcomm0
