@@ -13,6 +13,6 @@ export async function setTemplate(template: Template) {
 }
 
 export async function deleteTemplate(templateName: string) {
-    delete templates[templateName];
-    await storeObject(templates, templatesFilename);
+	delete templates[templateName];
+	await storeObject(templates, templatesFilename);
 }

@@ -1,5 +1,5 @@
 import type { PrinterConfig, PrinterConfigs, PrinterOptions, PrinterType } from '$lib/types';
-import { createEmptyJsonFileIfNotExists, readJson, storeObject } from '../fileUtil';
+import { createEmptyJsonFileIfNotExists, readJson, storeObject } from '../../fileUtil';
 import type { Printer } from './printer';
 import { SerialPrinter } from './serialPrinter';
 import { TcpPrinter } from './tcpPrinter';
@@ -20,7 +20,12 @@ export function reloadPrinters() {
 	}
 }
 
-export async function savePrinter<T extends PrinterType>(identifier: string, newIdentifier: string, type: T, options: PrinterOptions<T>) {
+export async function savePrinter<T extends PrinterType>(
+	identifier: string,
+	newIdentifier: string,
+	type: T,
+	options: PrinterOptions<T>
+) {
 	delete printerConfigs[identifier];
 
 	printerConfigs[newIdentifier] = {
@@ -32,7 +37,6 @@ export async function savePrinter<T extends PrinterType>(identifier: string, new
 	reloadPrinters();
 }
 
-
 export async function deletePrinter(identifier: string) {
 	delete printerConfigs[identifier];
 
@@ -40,13 +44,16 @@ export async function deletePrinter(identifier: string) {
 	reloadPrinters();
 }
 
-function printerFromConfig(identifier: string, printerConfig: PrinterConfig<any>) {
+function printerFromConfig<T extends PrinterType>(
+	identifier: string,
+	printerConfig: PrinterConfig<T>
+) {
 	switch (printerConfig.type) {
 		case 'serial': {
-			return new SerialPrinter(identifier, printerConfig.options);
+			return new SerialPrinter(identifier, printerConfig.options as PrinterOptions<'serial'>);
 		}
 		case 'tcp': {
-			return new TcpPrinter(identifier, printerConfig.options);
+			return new TcpPrinter(identifier, printerConfig.options as PrinterOptions<'tcp'>);
 		}
 		default:
 			throw new Error(`unknown printer type ${printerConfig.type}`);

@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { ProgressRadial } from "@skeletonlabs/skeleton";
-	import { fade } from "svelte/transition";
+	import { ProgressRadial } from '@skeletonlabs/skeleton';
+	import { fade } from 'svelte/transition';
 
-    export let renderPromise: Promise<string>;
+	export let renderPromise: Promise<string>;
 </script>
 
 {#await renderPromise}
@@ -15,7 +15,7 @@
 		/>
 	</div>
 {:then base64Img}
-	<img src={`data:image/png;base64, ${base64Img}`} alt="ZPL" />
+	<img src={`data:image/png;base64, ${base64Img}`} alt="" />
 {:catch e}
 	<aside transition:fade={{ duration: 200 }} class="alert variant-ghost-error">
 		<div class="alert-message">

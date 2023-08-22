@@ -15,30 +15,30 @@ export const actions: Actions = {
 			'height'
 		].map((name) => formData.get(name)?.valueOf());
 
-        if(!templateName || !zpl || !density || !width || !height) {
-            return fail(400);
-        }
+		if (!templateName || !zpl || !density || !width || !height) {
+			return fail(400);
+		}
 
 		const template: Template = {
 			name: `${templateName}`,
 			zpl: `${zpl}`,
 			density: `${density as Density}`,
 			width: parseFloat(`${width}`),
-			height: parseFloat(`${height}`),
+			height: parseFloat(`${height}`)
 		};
 
-        setTemplate(template);
+		setTemplate(template);
 
 		return;
 	},
-    async deleteTemplate({request}) {
+	async deleteTemplate({ request }) {
 		const formData = await request.formData();
-        const templateName = formData.get('templateName')?.valueOf();
+		const templateName = formData.get('templateName')?.valueOf();
 
-        if(!templateName || typeof templateName !== 'string') {
-            return fail(400);
-        }
+		if (!templateName || typeof templateName !== 'string') {
+			return fail(400);
+		}
 
-        await deleteTemplate(templateName);
-    }
+		await deleteTemplate(templateName);
+	}
 };

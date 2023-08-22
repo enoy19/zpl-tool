@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   app:
     image: ghcr.io/enoy19/zpl-tool:main

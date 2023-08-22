@@ -16,6 +16,7 @@ Besides template management, zpl-tool also provides support for managing multipl
 ## Quick Start
 
 ### **Run zpl-tool using Docker / Docker Compose**
+
 <details>
 <summary><strong>Using docker-compose:</strong></summary>
 
@@ -25,12 +26,12 @@ Create a file named `docker-compose.yml` in your directory and paste the followi
 version: '3'
 
 services:
-    zpl-tool:
-    image: ghcr.io/enoy19/zpl-tool:main
-    ports:
-        - "3000:3000"
-    volumes:
-        - "./data:/app/data"
+  zpl-tool:
+  image: ghcr.io/enoy19/zpl-tool:main
+  ports:
+    - '3000:3000'
+  volumes:
+    - './data:/app/data'
 ```
 
 After saving the file, run the following command to start zpl-tool:
@@ -40,6 +41,7 @@ docker compose up
 ```
 
 zpl-tool will be available at [http://localhost:3000](http://localhost:3000).
+
 </details>
 
 <details>
@@ -52,6 +54,7 @@ docker run -p 3000:3000 -v $(pwd)/data:/app/data ghcr.io/enoy19/zpl-tool:main
 ```
 
 After running this command, zpl-tool will be available at [http://localhost:3000](http://localhost:3000).
+
 </details>
 
 ## Usage
@@ -70,7 +73,9 @@ After running this command, zpl-tool will be available at [http://localhost:3000
 - **Add a Printer**: Add a serial or tcp printer by entering the configuration and saving.
 
   ![Printers](./assets/printers.jpg)
-- **Print**: 
+
+- **Print**:
+
   - Navigate back the the home page.
   - click on `Print` on one of your templates.
   - Select your printer in the dropdown next to the `Print` button

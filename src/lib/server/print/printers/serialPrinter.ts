@@ -1,9 +1,10 @@
 import { SerialPort } from 'serialport';
 import { Printer } from './printer';
-import { fileExists } from '../fileUtil';
+import { fileExists } from '../../fileUtil';
+import type { PrinterOptions } from '$lib/types';
 
 export class SerialPrinter extends Printer {
-	constructor(identifier: string, private readonly options: any) {
+	constructor(identifier: string, private readonly options: PrinterOptions<'serial'>) {
 		super(identifier);
 	}
 

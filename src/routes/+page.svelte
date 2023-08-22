@@ -3,7 +3,7 @@
 	import Preview from '$lib/components/Preview.svelte';
 	import VariableInputs from '$lib/components/VariableInputs.svelte';
 	import { densities } from '$lib/constants';
-	import { getVariableNames, renderZplToPngBase64 } from '$lib/labelary';
+	import { renderZplToPngBase64 } from '$lib/labelary';
 	import type { Density, Variables } from '$lib/types';
 	import { slide } from 'svelte/transition';
 	import { throttle } from 'throttle-debounce';
@@ -11,6 +11,9 @@
 	import TemplateList from '$lib/components/TemplateList.svelte';
 	import type { ActionResult } from '@sveltejs/kit';
 	import { toastStore } from '@skeletonlabs/skeleton';
+	import { getVariableNames } from '$lib/render';
+	import PreviewController from '$lib/components/PreviewController.svelte';
+	import { autoRenderPreview } from '$lib/stores';
 
 	export let data: PageData;
 	$: ({ templates } = data);
@@ -22,8 +25,8 @@
 	let variableNames: string[] = [];
 	let variables: Variables = {};
 
-	let width: number = 100;
-	let height: number = 150;
+	let width = 100;
+	let height = 150;
 	let density: Density = '8dpmm';
 
 	const debouncedRender = throttle(1000, render, {
@@ -32,9 +35,12 @@
 
 	function dataChanged() {
 		variableNames = getVariableNames(zpl);
-		renderPromise = new Promise(() => null);
 
-		if (zpl.trim()) {
+		if ($autoRenderPreview) {
+			renderPromise = new Promise(() => null);
+		}
+
+		if (zpl.trim() && $autoRenderPreview) {
 			debouncedRender();
 		}
 	}
@@ -60,7 +66,7 @@
 				autohide: true,
 				background: 'variant-filled-error'
 			});
-		} else if(result.type === 'success') {
+		} else if (result.type === 'success') {
 			toastStore.trigger({
 				message: `Template saved!`,
 				autohide: true,
@@ -76,7 +82,7 @@
 			<div class="card p-4 mb-6">
 				<h3 class="h3 mb-2">Templates</h3>
 				<div class="flex flex-col gap-2">
-					<TemplateList {templateNames} on:templateSelected={(e) => loadTemplate(e.detail)}/>
+					<TemplateList {templateNames} on:templateSelected={(e) => loadTemplate(e.detail)} />
 				</div>
 			</div>
 			<h2 class="h2 mb-4">Editor</h2>
@@ -153,6 +159,9 @@
 		</div>
 		<div class="w-full">
 			<h2 class="h2 mb-4">Preview</h2>
+			<div class="mb-3">
+				<PreviewController on:click={render} />
+			</div>
 			<Preview {renderPromise} />
 		</div>
 	</div>

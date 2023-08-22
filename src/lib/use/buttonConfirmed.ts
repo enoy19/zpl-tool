@@ -1,33 +1,33 @@
 import { modalStore } from '@skeletonlabs/skeleton';
 
 type ButtonConfirmedOptions = {
-    title?: string,
-    body?: string,
+	title?: string;
+	body?: string;
 };
 
 export function confirmed(button: HTMLButtonElement, options?: ButtonConfirmedOptions) {
-    let confirmed = false;
+	let confirmed = false;
 
 	const clickListener = (e: MouseEvent) => {
-        if(!confirmed) {
-            e.preventDefault();
+		if (!confirmed) {
+			e.preventDefault();
 
-            const {title, body} = options ?? {};
-    
-            modalStore.trigger({
-                type: 'confirm',
-                title,
-                body,
-                response(r) {
-                    if (r) {
-                        confirmed = true;
-                        button.click();
-                    }
-                }
-            });
+			const { title, body } = options ?? {};
 
-            confirmed = false;
-        }
+			modalStore.trigger({
+				type: 'confirm',
+				title,
+				body,
+				response(r) {
+					if (r) {
+						confirmed = true;
+						button.click();
+					}
+				}
+			});
+
+			confirmed = false;
+		}
 	};
 	button.addEventListener('click', clickListener);
 

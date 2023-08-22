@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import Preview from '$lib/components/Preview.svelte';
 	import VariableInputs from '$lib/components/VariableInputs.svelte';
-	import { getVariableNames, renderZpl, renderZplToPngBase64 } from '$lib/labelary';
+	import { renderZplToPngBase64 } from '$lib/labelary';
 	import type { Variables } from '$lib/types';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';
@@ -12,6 +12,9 @@
 	import { FileDropzone, toastStore } from '@skeletonlabs/skeleton';
 	import PrintButton from '$lib/components/PrintButton.svelte';
 	import type { ActionResult } from '@sveltejs/kit';
+	import { getVariableNames, renderZpl } from '$lib/render';
+	import PreviewController from '$lib/components/PreviewController.svelte';
+	import { autoRenderPreview } from '$lib/stores';
 
 	export let data: PageData;
 	$: ({ templates, printers } = data);
@@ -53,7 +56,11 @@
 		}
 	}
 
-	onMount(() => debouncedRender());
+	onMount(() => {
+		if ($autoRenderPreview) {
+			debouncedRender();
+		}
+	});
 </script>
 
 <div class="container mx-auto flex justify-center items-center">
@@ -62,7 +69,15 @@
 			<h2 class="h2 mb-4">Variables</h2>
 			<div class="card p-4 flex flex-col gap-2 mt-4">
 				<h3 class="h3">Variables</h3>
-				<VariableInputs {variableNames} bind:variables on:input={debouncedRender} />
+				<VariableInputs
+					{variableNames}
+					bind:variables
+					on:input={() => {
+						if ($autoRenderPreview) {
+							debouncedRender();
+						}
+					}}
+				/>
 			</div>
 			<form
 				class="mt-4"
@@ -119,6 +134,9 @@
 		</div>
 		<div class="w-full">
 			<h2 class="h2 mb-4">Preview</h2>
+			<div class="mb-3">
+				<PreviewController on:click={render} />
+			</div>
 			<Preview {renderPromise} />
 		</div>
 	</div>

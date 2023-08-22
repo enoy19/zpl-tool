@@ -4,8 +4,8 @@
 	let selectedPrinter = persisted('selectedPrinter', undefined);
 
 	export let printers: string[];
-	export let buttonLabel: string = 'Print';
-    export let buttonColor: string = 'variant-filled-primary';
+	export let buttonLabel = 'Print';
+	export let buttonColor = 'variant-filled-primary';
 </script>
 
 <div class="input-group input-group-divider grid-cols-[auto_1fr] mt-3">

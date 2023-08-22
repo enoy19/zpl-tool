@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	import '@skeletonlabs/skeleton/themes/theme-rocket.css';
 	import '@skeletonlabs/skeleton/styles/skeleton.css';
 	import '../app.postcss';
@@ -7,7 +7,7 @@
 	import { AppBar } from '@skeletonlabs/skeleton';
 </script>
 
-<Toast position="br"/>
+<Toast position="br" />
 <Modal />
 
 <div class="mb-32">
@@ -18,14 +18,14 @@
 				<a href="/printers">Printers</a>
 			</svelte:fragment>
 		</AppBar>
-		<slot name="pageHeader" slot="pageHeader"/>
-		
+		<slot name="pageHeader" slot="pageHeader" />
+
 		<slot name="sidebarLeft" slot="sidebarLeft" />
-		
+
 		<slot />
-		
-		<slot name="sidebarRight" slot="sidebarRight"/>
-	
+
+		<slot name="sidebarRight" slot="sidebarRight" />
+
 		<slot name="pageFooter" slot="pageFooter" />
 		<slot name="footer" slot="footer" />
 	</AppShell>

@@ -1,7 +1,7 @@
-import { deletePrinter, printerConfigs, savePrinter } from '$lib/server/printers';
+import { deletePrinter, printerConfigs, savePrinter } from '$lib/server/print/printers';
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import type { PrinterConfig, PrinterType } from '$lib/types';
+import type { PrinterType } from '$lib/types';
 import { printerTypes } from '$lib/constants';
 
 export const load: PageServerLoad = async () => {

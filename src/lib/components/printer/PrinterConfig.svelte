@@ -44,10 +44,14 @@
 		<footer class="card-footer flex flex-row-reverse justify-between">
 			<button type="submit" class="btn variant-filled-primary">Save</button>
 			{#if !deleteHidden}
-				<button formaction={formDeleteAction} class="btn variant-filled-error" use:confirmed={{
-					title: 'Delete Printer',
-					body: `Please confirm that you want to delete "${identifier}"`
-				}}>Delete</button>
+				<button
+					formaction={formDeleteAction}
+					class="btn variant-filled-error"
+					use:confirmed={{
+						title: 'Delete Printer',
+						body: `Please confirm that you want to delete "${identifier}"`
+					}}>Delete</button
+				>
 			{:else}
 				<div />
 			{/if}

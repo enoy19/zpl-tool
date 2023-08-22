@@ -3,7 +3,7 @@ import type { densities, printerTypes } from './constants';
 export type Densities = (typeof densities)[number];
 
 export type Density = `${Densities}dpmm`;
-export type Variables = Record<string, any>;
+export type Variables = Record<string, string>;
 
 export type Template = {
 	name: string;
@@ -34,4 +34,4 @@ export type PrinterConfig<T extends PrinterType> = {
 	options: PrinterOptions<T>;
 };
 
-export type PrinterConfigs = Record<string, PrinterConfig<any>>;
+export type PrinterConfigs = Record<string, PrinterConfig<PrinterType>>;

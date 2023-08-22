@@ -1,9 +1,10 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import neatCsv from 'neat-csv';
-import { renderZpl } from '$lib/labelary';
 import { templates } from '$lib/server/templates';
-import { printerConfigs, printers } from '$lib/server/printers';
+import { printerConfigs } from '$lib/server/print/printers';
+import { print } from '$lib/server/print';
+import { renderZpl } from '$lib/render';
 
 export const load: PageServerLoad = async () => {
 	const printers = Object.keys(printerConfigs);
@@ -26,11 +27,16 @@ export const actions: Actions = {
 
 		try {
 			await print(zpl, printer);
-		} catch(e: any) {
+		} catch (e: unknown) {
 			console.error(e);
-			return fail(500, {
-				message: e?.message,
-			});
+
+			if (e instanceof Error) {
+				return fail(500, {
+					message: e.message
+				});
+			}
+
+			throw e;
 		}
 	},
 	async printBulk({ request, params }) {
@@ -54,25 +60,20 @@ export const actions: Actions = {
 			return fail(404);
 		}
 
-		const zpl = variableArray.map((variables) => renderZpl(template.zpl, variables)).join('\n');
-        
+		const zpl = renderZpl(template.zpl, ...variableArray);
+
 		try {
 			await print(zpl, printer);
-		} catch(e: any) {
+		} catch (e: unknown) {
 			console.error(e);
-			return fail(500, {
-				message: e?.message,
-			});
+
+			if (e instanceof Error) {
+				return fail(500, {
+					message: e.message
+				});
+			}
+
+			throw e;
 		}
 	}
 };
-
-async function print(zpl: string, printerIdentifier: string) {
-	const printer = printers.find(p => p.identifier === printerIdentifier);
-
-	if(!printer) {
-		throw new Error(`printer ${printer} not found`);
-	}
-
-	await printer.print(zpl);
-}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { baudRates } from '$lib/constants';
-    export let options: any;
+	export let options: Record<string, unknown>;
 </script>
 
 <label for="path" class="label">
