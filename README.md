@@ -85,6 +85,12 @@ After running this command, zpl-tool will be available at [http://localhost:3000
 
 ## Developing
 
+### Prerequisites
+
+- GraphicsMagick + ghostscript
+  - RPM: `sudo dnf install GraphicsMagick ghostscript`
+  - Debian / Mac / Windows: https://github.com/yakovmeister/pdf2image/blob/HEAD/docs/gm-installation.md
+
 Once you've cloned the repository and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
 ```bash

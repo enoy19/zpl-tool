@@ -1,12 +1,11 @@
-import { env } from '$env/dynamic/public';
 import { getVariableNames, renderZpl } from '$lib/render';
 import { print } from '$lib/server/print';
 import { templates } from '$lib/server/templates';
-import type { RequestHandler } from '@sveltejs/kit';
+import { text, type RequestHandler } from '@sveltejs/kit';
 
-export const GET: RequestHandler = async ({ params }) => {
+export const GET: RequestHandler = async ({ params, url }) => {
 	try {
-		const { templateIdentifier, printerIdentifier } = getAndValidateParams(params);
+		const { templateIdentifier } = getAndValidateParams(params);
 
 		const template = templates[templateIdentifier];
 		const variables = getVariableNames(template.zpl);
@@ -18,9 +17,8 @@ export const GET: RequestHandler = async ({ params }) => {
 
 		const exampleJson = JSON.stringify(exampleObject, undefined, 2);
 
-		return new Response(`Make a POST Request on ${env.PUBLIC_BASE_URL}/api/${encodeURIComponent(
-			templateIdentifier
-		)}/${encodeURIComponent(printerIdentifier)}
+		return text(`Make a POST Request on ${url.toString()}
+
 Example Body (application/json):
 ${exampleJson}    
     `);
@@ -49,7 +47,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 		const renderedZpl = renderZpl(template.zpl, ...variables);
 		await print(renderedZpl, printerIdentifier);
 
-		return new Response('DONE');
+		return text('DONE');
 	} catch (e) {
 		if (e instanceof Error) {
 			return new Response(e.message, {

@@ -23,6 +23,9 @@ export function reloadPrinters() {
 export async function savePrinter<T extends PrinterType>(
 	identifier: string,
 	newIdentifier: string,
+	dpmm: number,
+	widthMm: number,
+	heightMm: number,
 	type: T,
 	options: PrinterOptions<T>
 ) {
@@ -30,6 +33,9 @@ export async function savePrinter<T extends PrinterType>(
 
 	printerConfigs[newIdentifier] = {
 		type,
+		dpmm,
+		widthMm,
+		heightMm,
 		options
 	};
 

@@ -17,14 +17,17 @@ export const actions: Actions = {
 		const typeString = formData.get('type')?.valueOf();
 		const identifier = formData.get('identifier')?.valueOf();
 		const newIdentifier = formData.get('newIdentifier')?.valueOf();
+		const dpmmString = formData.get('dpmm')?.valueOf();
+		const widthMmString = formData.get('widthMm')?.valueOf();
+		const heightMmString = formData.get('heightMm')?.valueOf();
 
 		if (
-			!typeString ||
-			typeof typeString !== 'string' ||
-			!identifier ||
-			typeof identifier !== 'string' ||
-			!newIdentifier ||
-			typeof newIdentifier !== 'string'
+			!isString(typeString) ||
+			!isString(identifier) ||
+			!isString(newIdentifier) ||
+			!isString(dpmmString) ||
+			!isString(widthMmString) ||
+			!isString(heightMmString)
 		) {
 			return fail(400);
 		}
@@ -35,6 +38,14 @@ export const actions: Actions = {
 
 		const type = typeString as PrinterType;
 
+		const dpmm = parseFloat(dpmmString as string);
+		const widthMm = parseFloat(widthMmString as string);
+		const heightMm = parseFloat(heightMmString as string);
+
+		if (isNaN(dpmm) || isNaN(widthMm) || isNaN(heightMm)) {
+			return fail(400, { message: 'invalid dpmm, width or height' });
+		}
+
 		switch (typeString as PrinterType) {
 			case 'serial': {
 				const path = formData.get('path')?.valueOf();
@@ -44,10 +55,18 @@ export const actions: Actions = {
 					return fail(400);
 				}
 
-				await savePrinter(identifier, newIdentifier, type, {
-					path,
-					baudRate: parseInt(baudRate)
-				});
+				await savePrinter(
+					identifier as string,
+					newIdentifier as string,
+					dpmm,
+					widthMm,
+					heightMm,
+					type,
+					{
+						path,
+						baudRate: parseInt(baudRate)
+					}
+				);
 
 				break;
 			}
@@ -59,10 +78,18 @@ export const actions: Actions = {
 					return fail(400);
 				}
 
-				await savePrinter(identifier, newIdentifier, type, {
-					host,
-					port: parseInt(port)
-				});
+				await savePrinter(
+					identifier as string,
+					newIdentifier as string,
+					dpmm,
+					widthMm,
+					heightMm,
+					type,
+					{
+						host,
+						port: parseInt(port)
+					}
+				);
 
 				break;
 			}
@@ -82,3 +109,11 @@ export const actions: Actions = {
 		await deletePrinter(identifier);
 	}
 };
+
+function isString(string: unknown) {
+	if (!string || typeof string !== 'string') {
+		return false;
+	}
+
+	return true;
+}

@@ -1,5 +1,7 @@
 FROM node:18.16.0-alpine3.16 AS build
 
+RUN apk add --no-cache ghostscript graphicsmagick
+
 WORKDIR /app
 COPY . .
 
@@ -18,6 +20,8 @@ RUN npm run build
 #######################################
 
 FROM node:18.16.0-alpine3.16
+
+RUN apk add --no-cache ghostscript graphicsmagick
 
 WORKDIR /app
 RUN rm -rf ./*

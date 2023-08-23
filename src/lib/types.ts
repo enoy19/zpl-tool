@@ -31,6 +31,9 @@ export type PrinterOptions<T extends PrinterType> = T extends 'serial'
 
 export type PrinterConfig<T extends PrinterType> = {
 	type: T;
+	dpmm: number;
+	widthMm: number;
+	heightMm: number;
 	options: PrinterOptions<T>;
 };
 

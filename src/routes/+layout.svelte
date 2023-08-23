@@ -16,6 +16,7 @@
 			<a href="/">zpl-tool</a>
 			<svelte:fragment slot="trail">
 				<a href="/printers">Printers</a>
+				<a href="/pdf">Print PDF</a>
 			</svelte:fragment>
 		</AppBar>
 		<slot name="pageHeader" slot="pageHeader" />

@@ -14,7 +14,8 @@
 		<h1 class="h1">Printers</h1>
 		{#each printerIdentifiers as identifier, i (`${i}_${identifier}`)}
 			{@const printerConfig = printerConfigs[identifier]}
-			<PrinterConfigBase {identifier} type={printerConfig.type}>
+			{@const { dpmm, widthMm, heightMm } = printerConfig}
+			<PrinterConfigBase {identifier} type={printerConfig.type} {dpmm} {widthMm} {heightMm}>
 				<svelte:fragment slot="options">
 					{#if printerConfig.type === 'serial'}
 						<SerialPrinterOptions options={printerConfig.options} />
@@ -26,7 +27,14 @@
 		{/each}
 		<hr class="my-4 w-full" />
 		<h1 class="h1">New Printer</h1>
-		<PrinterConfigBase identifier="New Serial Printer" type="serial" deleteHidden>
+		<PrinterConfigBase
+			identifier="New Serial Printer"
+			type="serial"
+			dpmm={0}
+			heightMm={0}
+			widthMm={0}
+			deleteHidden
+		>
 			<SerialPrinterOptions
 				slot="options"
 				options={{
@@ -36,7 +44,14 @@
 			/>
 		</PrinterConfigBase>
 
-		<PrinterConfigBase identifier="New TCP Printer" type="tcp" deleteHidden>
+		<PrinterConfigBase
+			identifier="New TCP Printer"
+			type="tcp"
+			dpmm={0}
+			heightMm={0}
+			widthMm={0}
+			deleteHidden
+		>
 			<TcpPrinterOptions
 				slot="options"
 				options={{

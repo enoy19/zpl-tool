@@ -4,6 +4,9 @@
 	import { confirmed } from '$lib/use/buttonConfirmed';
 
 	export let identifier: string;
+	export let dpmm: number;
+	export let widthMm: number;
+	export let heightMm: number;
 	export let type: PrinterType;
 	export let formAction = '?/savePrinter';
 	export let formDeleteAction = '?/deletePrinter';
@@ -27,11 +30,27 @@
 			<h2 class="h2">{identifier}</h2>
 			<span class="badge variant-filled">{type}</span>
 		</header>
-		<section class="p-4">
+		<section class="flex flex-col p-4 gap-2">
 			<label for="name" class="label mb-3">
 				<span>Name</span>
 				<input class="input" type="text" name="newIdentifier" id="name" value={identifier} />
 			</label>
+			<div class="card p-2">
+				<section>
+					<label for="dpmm" class="label mb-3">
+						<span>DPMM</span>
+						<input class="input" type="number" name="dpmm" id="dpmm" value={dpmm} />
+					</label>
+					<label for="widthMm" class="label mb-3">
+						<span>Width (mm)</span>
+						<input class="input" type="number" name="widthMm" id="widthMm" value={widthMm} />
+					</label>
+					<label for="heightMm" class="label mb-3">
+						<span>Height (mm)</span>
+						<input class="input" type="number" name="heightMm" id="heightMm" value={heightMm} />
+					</label>
+				</section>
+			</div>
 			<div class="card p-2">
 				<header>
 					<h2>Options</h2>
