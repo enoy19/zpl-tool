@@ -12,6 +12,7 @@ export async function convertPdfToImage(
 
 	return new Promise<Buffer>((resolve, reject) => {
 		imageMagick(buffer, pageSetup)
+			.in('-define', 'pdf:use-cropbox=true')
 			.density(dpmmToDpi(dpmm), dpmmToDpi(dpmm))
 			.resize(width, height, '!')
 			.quality(0)
