@@ -8,10 +8,11 @@ Besides template management, zpl-tool also provides support for managing multipl
 
 ## Features
 
-- **📄 Manage Multiple ZPL Templates**: Easily handle multiple ZPL templates with variable support.
+- **✏️ Manage Multiple ZPL Templates**: Easily handle multiple ZPL templates with variable support.
 - **🔍 Live Template Preview**: Generates a live preview of the templates with automatic updates when testing variables.
 - **🖨️ Support for Multiple Printers**: Manage multiple printers, including Serial and TCP printers.
 - **🔢 Bulk Printing**: Efficiently print in bulk by providing a CSV file.
+- **📄 PDF Printing**: Print any PDF file.
 
 ## Quick Start
 
@@ -69,7 +70,7 @@ After running this command, zpl-tool will be available at [http://localhost:3000
 
 ### Managing Printers & Printing
 
-- **Navigate to Printers**: Click `Printers` in the navigation bar
+- **Navigate to Printers**: Click `Printers` in the navigation bar.
 - **Add a Printer**: Add a serial or tcp printer by entering the configuration and saving.
 
   ![Printers](./assets/printers.jpg)
@@ -82,6 +83,13 @@ After running this command, zpl-tool will be available at [http://localhost:3000
   - click `Print`
 
     ![Print](./assets/print.jpg)
+
+### Printing PDF
+
+- **Navigate to Print PDF**: Click `Print PDF` in the navigation bar.
+- **Drop your PDF**: Drag&Drop you PDF file into the upload zone or click the zone and select your file.
+- **Print**: Click print!
+- **⚠️ IMPORTANT ⚠️**: You need to configure the Printer dimensions and dpmm in the `Printers` page.
 
 ## Developing
 
