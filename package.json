@@ -21,6 +21,7 @@
 		"@sveltejs/kit": "^1.5.0",
 		"@tailwindcss/forms": "^0.5.4",
 		"@tailwindcss/typography": "^0.5.9",
+		"@types/gm": "^1.25.1",
 		"@types/throttle-debounce": "^5.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.45.0",
 		"@typescript-eslint/parser": "^5.45.0",
@@ -41,11 +42,10 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"gm": "^1.25.0",
 		"neat-csv": "^7.0.0",
 		"pdf-lib": "^1.17.1",
-		"pdf2pic": "^3.0.1",
 		"serialport": "^11.0.1",
-		"sharp": "^0.32.5",
 		"svelte-local-storage-store": "^0.5.0",
 		"throttle-debounce": "^5.0.0"
 	}

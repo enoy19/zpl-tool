@@ -1,6 +1,10 @@
-FROM node:18.16.0-alpine3.16 AS build
+FROM node:18.16.0-alpine3.16 AS runtime
 
-RUN apk add --no-cache ghostscript graphicsmagick
+RUN apk add --no-cache imagemagick
+
+# ! ######################################
+
+FROM runtime AS build
 
 WORKDIR /app
 COPY . .
@@ -17,11 +21,9 @@ ENV TZ='Etc/UTC'
 
 RUN npm run build
 
-#######################################
+# ! ######################################
 
-FROM node:18.16.0-alpine3.16
-
-RUN apk add --no-cache ghostscript graphicsmagick
+FROM runtime
 
 WORKDIR /app
 RUN rm -rf ./*

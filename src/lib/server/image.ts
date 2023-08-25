@@ -1,14 +1,19 @@
 import { PDFDocument } from 'pdf-lib';
 import { convertPdfToImage } from './pdf';
-import sharp from 'sharp';
+import { identify, imageMagick } from './imageMagick';
 
-export async function imageToZpl(buffer: Buffer, width: number, height: number, threshold = 50) {
-	const image = sharp(buffer);
-	const metadata = await image.metadata();
+export async function imageToZpl(
+	input: Buffer,
+	width: number,
+	height: number,
+	thresholdPercent = 75
+) {
+	const metadata = await identify(input);
+
 	const rotation = calculateRotation(
 		{
-			width: metadata.width ?? 1,
-			height: metadata.height ?? 1
+			width: metadata.size.width ?? 1,
+			height: metadata.size.height ?? 1
 		},
 		{
 			width,
@@ -18,18 +23,33 @@ export async function imageToZpl(buffer: Buffer, width: number, height: number, 
 
 	const paddedWidth = width + getPadding(width, 8);
 
-	const sharpBuffer = await image
-		.rotate(rotation)
-		.negate()
-		.threshold(threshold) // Convert to monochrome
-		.resize(paddedWidth, height, {
-			fit: 'fill'
-		})
-		.extractChannel(0)
-		.raw()
-		.toBuffer();
+	const imageBuffer = await new Promise<Buffer>((resolve, reject) => {
+		imageMagick(input)
+			.background('#FFFFFF')
+			.flatten()
+			.rotate('black', rotation)
+			.resize(paddedWidth, height, '!')
+			.threshold(thresholdPercent, true)
+			.negative()
+			.bitdepth(8)
+			.setFormat('rgb')
+			.toBuffer((err, buffer) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(buffer);
+				}
+			});
+	});
 
-	const monochromeBuffer = bufferToBitBuffer(sharpBuffer);
+	const redBuffer = Buffer.alloc(imageBuffer.length / 3);
+
+	// Iterate through the buffer, pulling out only the Red values.
+	for (let i = 0, j = 0; i < imageBuffer.length; i += 3, j++) {
+		redBuffer[j] = imageBuffer[i];
+	}
+
+	const monochromeBuffer = bufferToBitBuffer(redBuffer);
 
 	const totalBytes = monochromeBuffer.byteLength;
 	const hexString = monochromeBuffer.toString('hex');
@@ -53,7 +73,7 @@ export async function pdfToImage(buffer: Buffer | ArrayBuffer, dpi = 300) {
 	const width = Math.round((widthInPointsRotated / 72) * dpi);
 	const height = Math.round((heightInPointsRotated / 72) * dpi);
 
-	const { buffer: image } = await convertPdfToImage(pdfDataBuffer, 10, width, height);
+	const image = await convertPdfToImage(pdfDataBuffer, 1, 10, width, height);
 
 	return { image, width, height };
 }
