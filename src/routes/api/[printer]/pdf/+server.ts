@@ -14,7 +14,7 @@ export const POST: RequestHandler = async ({ params, request }) => {
 
 		const { width, height } = mmToPixels(printer.dpmm, printer.widthMm, printer.heightMm);
 
-		const { image } = await pdfToImage(Buffer.from(await request.arrayBuffer()));
+		const image = await pdfToImage(Buffer.from(await request.arrayBuffer()));
 		const zpl = await imageToZpl(image, width, height);
 
 		await print(zpl, printerIdentifier);

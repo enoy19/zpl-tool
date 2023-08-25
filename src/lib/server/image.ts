@@ -1,4 +1,3 @@
-import { PDFDocument } from 'pdf-lib';
 import { convertPdfToImage } from './pdf';
 import { identify, imageMagick } from './imageMagick';
 
@@ -59,37 +58,9 @@ export async function imageToZpl(
 
 export async function pdfToImage(buffer: Buffer | ArrayBuffer, dpi = 300) {
 	const pdfDataBuffer = Buffer.from(buffer);
+	const image = await convertPdfToImage(pdfDataBuffer, 1, 10);
 
-	const pdfDoc = await PDFDocument.load(pdfDataBuffer);
-	const page = pdfDoc.getPage(0);
-	const { width: widthInPoints, height: heightInPoints } = page.getSize();
-	const rotation = page.getRotation();
-
-	const { width: widthInPointsRotated, height: heightInPointsRotated } = rotateDimension(
-		{ width: widthInPoints, height: heightInPoints },
-		rotation.type === 'degrees' ? rotation.angle : toDegree(rotation.angle)
-	);
-
-	const width = Math.round((widthInPointsRotated / 72) * dpi);
-	const height = Math.round((heightInPointsRotated / 72) * dpi);
-
-	const image = await convertPdfToImage(pdfDataBuffer, 1, 10, width, height);
-
-	return { image, width, height };
-}
-
-function rotateDimension({ width, height }: Dimensions, rotationDegrees: number) {
-	if (rotationDegrees % 180 !== 0) {
-		return {
-			width: height,
-			height: width
-		};
-	}
-
-	return {
-		width,
-		height
-	};
+	return image;
 }
 
 function bufferToBitBuffer(inputBuffer: Buffer): Buffer {
@@ -137,10 +108,6 @@ function calculateRotation(imageSize: Dimensions, pageSize: Dimensions): number 
 
 	// Rotate 90 degrees if the orientations are different
 	return imageIsLandscape !== pageIsLandscape ? 90 : 0;
-}
-
-function toDegree(radian: number) {
-	return (radian * 180) / Math.PI;
 }
 
 function isDecimal(num: number) {

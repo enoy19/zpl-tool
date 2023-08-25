@@ -5,8 +5,6 @@ export async function convertPdfToImage(
 	buffer: Buffer,
 	page: number,
 	dpmm: number,
-	width: number,
-	height: number
 ) {
 	const pageSetup = `pdf[${page - 1}]`;
 
@@ -14,7 +12,6 @@ export async function convertPdfToImage(
 		imageMagick(buffer, pageSetup)
 			.in('-define', 'pdf:use-cropbox=true')
 			.density(dpmmToDpi(dpmm), dpmmToDpi(dpmm))
-			.resize(width, height, '!')
 			.quality(0)
 			.compress('jpeg')
 			.stream('png', (error, stdout) => {
