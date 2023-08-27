@@ -13,7 +13,7 @@ export class SerialPrinter extends Printer {
 	 */
 	public async print(zpl: string): Promise<void> {
 		const path = this.options.path;
-		if (!path || !(await fileExists(path))) {
+		if (!path || !(await fileExists(path, false))) {
 			throw new Error(`${path} not found`);
 		}
 
