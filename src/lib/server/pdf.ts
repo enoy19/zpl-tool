@@ -1,17 +1,12 @@
-import { dpmmToDpi } from './dpiUtils';
 import { imageMagick } from './imageMagick';
 
-export async function convertPdfToImage(
-	buffer: Buffer,
-	page: number,
-	dpmm: number,
-) {
+export async function convertPdfToImage(buffer: Buffer, page: number) {
 	const pageSetup = `pdf[${page - 1}]`;
 
 	return new Promise<Buffer>((resolve, reject) => {
 		imageMagick(buffer, pageSetup)
 			.in('-define', 'pdf:use-cropbox=true')
-			.density(dpmmToDpi(dpmm), dpmmToDpi(dpmm))
+			.density(254, 254)
 			.quality(0)
 			.compress('jpeg')
 			.stream('png', (error, stdout) => {

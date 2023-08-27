@@ -1,33 +1,39 @@
 import { env } from '$env/dynamic/private';
 import fs from 'fs/promises';
 
-if (!(await fileExists(env.SECRET_DATA_PATH))) {
-	await fs.mkdir(env.SECRET_DATA_PATH, {
-		recursive: true
-	});
-}
+await mkdirIfNotExists('.');
 
-export async function storeObject(object: object, path: string) {
-	await fs.writeFile(getDataFilePathFor(path), JSON.stringify(object, undefined, 2));
-}
+export async function mkdirIfNotExists(dataPath: string) {
+	const path = getDataFilePathFor(dataPath);
 
-export async function createEmptyJsonFileIfNotExists(path: string) {
-	if (!fileExists(path)) {
-		await createEmptyJsonFile(path);
+	if (!(await fileExists(path, false))) {
+		await fs.mkdir(path, {
+			recursive: true
+		});
 	}
 }
 
-export async function readJson(path: string) {
+export async function storeObject(object: object, dataPath: string) {
+	await fs.writeFile(getDataFilePathFor(dataPath), JSON.stringify(object, undefined, 2));
+}
+
+export async function createEmptyJsonFileIfNotExists(dataPath: string) {
+	if (!fileExists(dataPath)) {
+		await createEmptyJsonFile(dataPath);
+	}
+}
+
+export async function readJson(dataPath: string) {
 	try {
-		return JSON.parse((await fs.readFile(getDataFilePathFor(path))).toString());
+		return JSON.parse((await fs.readFile(getDataFilePathFor(dataPath))).toString());
 	} catch (e) {
-		console.warn(`${path} not found`);
+		console.warn(`${dataPath} not found`);
 		return {};
 	}
 }
 
-async function createEmptyJsonFile(path: string) {
-	await storeObject({}, path);
+async function createEmptyJsonFile(dataPath: string) {
+	await storeObject({}, dataPath);
 }
 
 export async function fileExists(path: string, inDataPath = true) {
@@ -39,6 +45,6 @@ export async function fileExists(path: string, inDataPath = true) {
 	}
 }
 
-function getDataFilePathFor(path: string) {
-	return `${env.SECRET_DATA_PATH}/${path}`;
+export function getDataFilePathFor(dataPath: string) {
+	return `${env.SECRET_DATA_PATH}/${dataPath}`;
 }

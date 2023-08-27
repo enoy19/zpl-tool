@@ -56,9 +56,9 @@ export async function imageToZpl(
 	return `^XA^FO0,0^GFA,${totalBytes},${totalBytes},${Math.ceil(paddedWidth / 8)},${hexString}^XZ`;
 }
 
-export async function pdfToImage(buffer: Buffer | ArrayBuffer, dpi = 300) {
+export async function pdfToImage(buffer: Buffer | ArrayBuffer) {
 	const pdfDataBuffer = Buffer.from(buffer);
-	const image = await convertPdfToImage(pdfDataBuffer, 1, 10);
+	const image = await convertPdfToImage(pdfDataBuffer, 1);
 
 	return image;
 }
