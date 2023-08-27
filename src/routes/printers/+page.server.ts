@@ -93,6 +93,19 @@ export const actions: Actions = {
 
 				break;
 			}
+			case 'debug': {
+				await savePrinter(
+					identifier as string,
+					newIdentifier as string,
+					dpmm,
+					widthMm,
+					heightMm,
+					type,
+					{} as never
+				);
+
+				break;
+			}
 			default:
 				console.error(`unknown printer type: ${type}`);
 				return fail(500);

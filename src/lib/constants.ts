@@ -5,4 +5,4 @@ export const baudRates = [
 	76800, 115200, 230400, 460800, 576000, 921600
 ];
 
-export const printerTypes = ['serial', 'tcp'] as const;
+export const printerTypes = ['serial', 'tcp', 'debug'] as const;

@@ -1,9 +1,9 @@
-import type { PrinterOptions } from '$lib/types';
+import type { PrinterConfig } from '$lib/types';
 import { Printer } from './printer';
 import * as net from 'net';
 
 export class TcpPrinter extends Printer {
-	constructor(identifier: string, private readonly options: PrinterOptions<'tcp'>) {
+	constructor(identifier: string, private readonly config: PrinterConfig<'tcp'>) {
 		super(identifier);
 	}
 
@@ -11,7 +11,7 @@ export class TcpPrinter extends Printer {
 		const client = new net.Socket();
 
 		await new Promise((resolve, reject) => {
-			client.connect(this.options.port, this.options.host, () => {
+			client.connect(this.config.options.port, this.config.options.host, () => {
 				client.write(zpl, () => {
 					client.end();
 					resolve(undefined);

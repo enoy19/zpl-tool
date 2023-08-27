@@ -1,5 +1,6 @@
 import type { PrinterConfig, PrinterConfigs, PrinterOptions, PrinterType } from '$lib/types';
 import { createEmptyJsonFileIfNotExists, readJson, storeObject } from '../../fileUtil';
+import { DebugPrinter } from './debugPrinter';
 import type { Printer } from './printer';
 import { SerialPrinter } from './serialPrinter';
 import { TcpPrinter } from './tcpPrinter';
@@ -56,10 +57,13 @@ function printerFromConfig<T extends PrinterType>(
 ) {
 	switch (printerConfig.type) {
 		case 'serial': {
-			return new SerialPrinter(identifier, printerConfig.options as PrinterOptions<'serial'>);
+			return new SerialPrinter(identifier, printerConfig as PrinterConfig<'serial'>);
 		}
 		case 'tcp': {
-			return new TcpPrinter(identifier, printerConfig.options as PrinterOptions<'tcp'>);
+			return new TcpPrinter(identifier, printerConfig as PrinterConfig<'tcp'>);
+		}
+		case 'debug': {
+			return new DebugPrinter(identifier, printerConfig as PrinterConfig<'debug'>);
 		}
 		default:
 			throw new Error(`unknown printer type ${printerConfig.type}`);
