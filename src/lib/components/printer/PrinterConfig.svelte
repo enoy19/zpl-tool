@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import type { PrinterType } from '$lib/types';
 	import { confirmed } from '$lib/use/buttonConfirmed';
+	import { toastStore } from '@skeletonlabs/skeleton';
+	import type { ActionResult } from '@sveltejs/kit';
 
 	export let identifier: string;
 	export let dpmm: number;
@@ -12,15 +14,39 @@
 	export let formDeleteAction = '?/deletePrinter';
 
 	export let deleteHidden = false;
+
+	function handleFormResult(result: ActionResult, deletion: boolean) {
+		if (result.type === 'failure') {
+			const action = deletion ? 'delete' : 'save';
+
+			toastStore.trigger({
+				message: `[${result.status}] Failed to ${action} printer: ${result?.data?.message}`,
+				autohide: true,
+				background: 'variant-filled-error'
+			});
+		} else if (result.type === 'success') {
+			const action = deletion ? 'deleted' : 'saved';
+
+			toastStore.trigger({
+				message: `${identifier} ${action}`,
+				autohide: true,
+				background: 'variant-filled-success'
+			});
+		}
+	}
 </script>
 
 <div class="card w-full">
 	<form
 		method="post"
 		action={formAction}
-		use:enhance={() => {
-			return ({ update }) => {
+		use:enhance={({ submitter }) => {
+			const deletion =
+				(submitter && submitter.getAttribute('formaction') === formDeleteAction) || false;
+
+			return ({ result, update }) => {
 				update({ reset: false });
+				handleFormResult(result, deletion);
 			};
 		}}
 	>

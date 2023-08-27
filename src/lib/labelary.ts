@@ -2,8 +2,21 @@ import { renderZpl } from './render';
 import type { Density, Variables } from './types';
 
 export async function renderZplToPngBase64(
-	zpl: string,
+	zplTemplate: string,
 	variables: Variables,
+	density: Density,
+	widthMillimeter: number,
+	heightMillimeter: number,
+	labelIndex = 0
+) {
+	const zpl = renderZpl(zplTemplate, variables);
+
+	const pngData = await renderZplToPng(zpl, density, widthMillimeter, heightMillimeter, labelIndex);
+	return arrayBufferToBase64(pngData);
+}
+
+export async function renderZplToPng(
+	zpl: string,
 	density: Density,
 	widthMillimeter: number,
 	heightMillimeter: number,
@@ -11,47 +24,57 @@ export async function renderZplToPngBase64(
 ) {
 	const formData = new FormData();
 
-	const fileContent = renderZpl(zpl, variables);
-	const fileBlob = new Blob([fileContent], { type: 'text/plain' });
+	const fileBlob = new Blob([zpl], { type: 'text/plain' });
 	formData.append('file', fileBlob, 'blob');
 	formData.append('_charset_', 'UTF-8');
 
-	const response = await fetch(
-		`https://api.labelary.com/v1/printers/${density}/labels/${millimetersToInches(
-			widthMillimeter
-		)}x${millimetersToInches(heightMillimeter)}/${labelIndex}/`,
-		{
-			method: 'POST',
-			body: formData,
-			headers: {
-				Accept: 'image/png'
-			}
+	const url = `https://api.labelary.com/v1/printers/${density}/labels/${millimetersToInches(
+		widthMillimeter
+	)}x${millimetersToInches(heightMillimeter)}/${labelIndex}/`;
+
+	const response = await fetch(url, {
+		method: 'POST',
+		body: formData,
+		headers: {
+			Accept: 'image/png'
 		}
-	);
+	});
 
 	if (!response.ok) {
 		const errorText = await response.text();
 		throw new Error(errorText);
 	}
 
-	return blobToBase64(await response.blob());
+	return blobToArrayBuffer(await response.blob());
 }
 
 function millimetersToInches(mm: number) {
 	return (mm / 25.4).toFixed(10);
 }
 
-async function blobToBase64(blob: Blob): Promise<string> {
+async function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer> {
 	return new Promise((resolve, reject) => {
 		const reader = new FileReader();
 
 		reader.onloadend = () => {
-			const base64data = reader.result as string;
-			resolve(base64data.split(',')[1]);
+			if (reader.result instanceof ArrayBuffer) {
+				resolve(reader.result);
+			} else {
+				reject(new Error('blob read result is not array buffer'));
+			}
 		};
 
 		reader.onerror = () => reject(new Error('An error occurred reading the blob'));
 
-		reader.readAsDataURL(blob);
+		reader.readAsArrayBuffer(blob);
 	});
+}
+
+function arrayBufferToBase64(buffer: ArrayBuffer) {
+	let binary = '';
+	const data = new Uint8Array(buffer);
+	for (let i = 0; i < data.byteLength; i++) {
+		binary += String.fromCharCode(data[i]);
+	}
+	return window.btoa(binary);
 }

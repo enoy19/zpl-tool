@@ -25,6 +25,7 @@
 	let variables: Variables = {};
 	let renderPromise: Promise<string>;
 	let csvFiles: FileList;
+	let printing = false;
 
 	$: zpl = renderZpl(template.zpl, variables);
 
@@ -52,6 +53,12 @@
 				message: `[${result.status}] Print failed: ${result?.data?.message}`,
 				autohide: true,
 				background: 'variant-filled-error'
+			});
+		} else if (result.type === 'success') {
+			toastStore.trigger({
+				message: `Print successful`,
+				autohide: true,
+				background: 'variant-filled-success'
 			});
 		}
 	}
@@ -84,14 +91,18 @@
 				method="post"
 				action="?/print"
 				use:enhance={() => {
+					printing = true;
+
 					return async ({ update, result }) => {
+						printing = false;
+
 						update({ reset: false });
 						handleFormResult(result);
 					};
 				}}
 			>
 				<input type="hidden" name="zpl" value={zpl} />
-				<PrintButton {printers} />
+				<PrintButton {printers} {printing} />
 			</form>
 			<hr class="my-3" />
 			<div class="mt-3">
@@ -108,7 +119,11 @@
 					method="post"
 					enctype="multipart/form-data"
 					use:enhance={() => {
+						printing = true;
+
 						return async ({ update, result }) => {
+							printing = false;
+
 							update({ reset: false });
 							handleFormResult(result);
 						};
@@ -128,6 +143,8 @@
 							csvFiles && csvFiles.length > 0 ? `: ${csvFiles.item(0)?.name}` : ''
 						}`}
 						buttonColor="variant-filled-warning"
+						progressRadialColor="fill-on-warning-token"
+						{printing}
 					/>
 				</form>
 			</div>

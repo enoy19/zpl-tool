@@ -10,6 +10,7 @@
 	$: ({ printers } = data);
 
 	let pdfFiles: FileList;
+	let printing = false;
 
 	function handleFormResult(result: ActionResult) {
 		if (result.type === 'failure') {
@@ -18,7 +19,7 @@
 				autohide: true,
 				background: 'variant-filled-error'
 			});
-		} else {
+		} else if (result.type === 'success') {
 			toastStore.trigger({
 				message: `Print successful`,
 				autohide: true,
@@ -37,7 +38,11 @@
 			enctype="multipart/form-data"
 			action="?/print"
 			use:enhance={() => {
+				printing = true;
+
 				return async ({ update, result }) => {
+					printing = false;
+
 					update({ reset: false });
 					handleFormResult(result);
 				};
@@ -63,7 +68,7 @@
 					</ul>
 				</div>
 			{/if}
-			<PrintButton {printers} />
+			<PrintButton {printers} {printing} />
 		</form>
 	</div>
 </div>
