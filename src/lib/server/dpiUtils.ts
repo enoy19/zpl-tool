@@ -1,7 +1,7 @@
 export function dpmmToDpi(dpmm: number): number {
 	const mmPerInch = 25.4;
 	const dpi = dpmm * mmPerInch;
-	return dpi;
+	return Math.round(dpi);
 }
 
 export function mmToPixels(dpmm: number, widthMm: number, heightMm: number) {

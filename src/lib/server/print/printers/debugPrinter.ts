@@ -1,6 +1,5 @@
-import { getDataFilePathFor, mkdirIfNotExists } from '$lib/server/fileUtil';
+import { mkdirIfNotExists, writeDataFile } from '$lib/server/fileUtil';
 import type { PrinterConfig } from '$lib/types';
-import { writeFile } from 'fs/promises';
 import { Printer } from './printer';
 
 export class DebugPrinter extends Printer {
@@ -9,14 +8,11 @@ export class DebugPrinter extends Printer {
 	}
 
 	public async print(zpl: string): Promise<void> {
-		console.debug(`ZPL:\n\n ${zpl}`);
-
 		await mkdirIfNotExists('debug');
 
 		const filename = Date.now();
-		const zplPath = getDataFilePathFor(`debug/${filename}.zpl`);
-		await writeFile(zplPath, zpl);
+		await writeDataFile(`debug/${filename}.zpl`, zpl);
 
-		await new Promise((resolve) => setTimeout(resolve, 1000));
+		await new Promise((resolve) => setTimeout(resolve, 500));
 	}
 }

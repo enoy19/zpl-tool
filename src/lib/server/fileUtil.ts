@@ -14,13 +14,17 @@ export async function mkdirIfNotExists(dataPath: string) {
 }
 
 export async function storeObject(object: object, dataPath: string) {
-	await fs.writeFile(getDataFilePathFor(dataPath), JSON.stringify(object, undefined, 2));
+	await writeDataFile(dataPath, JSON.stringify(object, undefined, 2));
 }
 
 export async function createEmptyJsonFileIfNotExists(dataPath: string) {
 	if (!fileExists(dataPath)) {
 		await createEmptyJsonFile(dataPath);
 	}
+}
+
+export async function writeDataFile(dataPath: string, data: string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView>) {
+	await fs.writeFile(getDataFilePathFor(dataPath), data);
 }
 
 export async function readJson(dataPath: string) {

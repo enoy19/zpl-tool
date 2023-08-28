@@ -1,16 +1,21 @@
+import { dev } from '$app/environment';
+import { mkdirIfNotExists, writeDataFile } from './fileUtil';
 import { imageMagick } from './imageMagick';
 
 export async function convertPdfToImage(buffer: Buffer, page: number) {
 	const pageSetup = `pdf[${page - 1}]`;
 
-	return new Promise<Buffer>((resolve, reject) => {
+	const imageBuffer = await new Promise<Buffer>((resolve, reject) => {
 		imageMagick(buffer, pageSetup)
-			.in('-define', 'pdf:use-cropbox=true')
-			.density(254, 254)
-			.quality(0)
-			.compress('jpeg')
-			.stream('png', (error, stdout) => {
+			.in('-define', 'pdf:use-cropbox=true', '-alpha', 'remove')
+			.density(300, 300)
+			.background('#ffffff')
+			.stream('jpg', (error, stdout, _, cmd) => {
 				const buffers: Buffer[] = [];
+
+				if (dev) {
+					console.debug(`PDF: ${cmd}`);
+				}
 
 				if (error) {
 					reject(error);
@@ -26,4 +31,13 @@ export async function convertPdfToImage(buffer: Buffer, page: number) {
 					});
 			});
 	});
+
+	if (dev) {
+		await mkdirIfNotExists('debug');
+
+		const filename = Date.now();
+		await writeDataFile(`debug/${filename}.pdf.png`, imageBuffer);
+	}
+
+	return imageBuffer;
 }
