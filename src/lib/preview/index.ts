@@ -1,39 +1,26 @@
-import { env } from '$env/dynamic/public';
-import type { Density, Variables } from '$lib/types';
-import { renderZplToPng as labelary } from './labelary';
-import { renderZplToPng as binarykitsZpl } from './binarykitsZpl';
 import { renderZpl } from '$lib/render';
+import type { Density, Variables } from '$lib/types';
+import { renderZplToPng as binarykitsZpl } from './binarykitsZpl';
+import { renderZplToPng as labelary } from './labelary';
 
-type PreviewGeneratorType = 'binarykits-zpl' | 'labelary' | string;
-export const previewGeneratorType: PreviewGeneratorType = env.PUBLIC_PREVIEW_GENERATOR;
+export const previewGeneratorTypes = ['labelary', 'binarykitsZpl'] as const;
+export type PreviewGeneratorType = (typeof previewGeneratorTypes)[number];
 
 export type PreviewGenerator = (
 	zpl: string,
 	density: Density,
 	widthMillimeter: number,
 	heightMillimeter: number,
-    labelIndex: number
+	labelIndex: number
 ) => Promise<ArrayBuffer>;
 
-export let previewGenerator: PreviewGenerator;
-
-switch (previewGeneratorType) {
-	case 'binarykits-zpl': {
-		previewGenerator = binarykitsZpl;
-		break;
-	}
-	case 'labelary':{
-		previewGenerator = labelary;
-        break;
-    }
-    default: {
-        console.warn(`invalid preview generator: ${previewGeneratorType}.`);
-        
-        previewGenerator = async () => new ArrayBuffer(0);
-    }
-}
+export const previewGenerators = {
+	binarykitsZpl,
+	labelary
+};
 
 export async function renderZplToPngBase64(
+	generator: PreviewGeneratorType,
 	zplTemplate: string,
 	variables: Variables,
 	density: Density,
@@ -41,9 +28,17 @@ export async function renderZplToPngBase64(
 	heightMillimeter: number,
 	labelIndex = 0
 ) {
+	const previewGenerator = previewGenerators[generator];
+
 	const zpl = renderZpl(zplTemplate, variables);
 
-	const pngData = await previewGenerator(zpl, density, widthMillimeter, heightMillimeter, labelIndex);
+	const pngData = await previewGenerator(
+		zpl,
+		density,
+		widthMillimeter,
+		heightMillimeter,
+		labelIndex
+	);
 	return arrayBufferToBase64(pngData);
 }
 

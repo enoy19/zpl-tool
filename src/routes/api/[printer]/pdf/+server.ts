@@ -1,7 +1,7 @@
 import { print } from '$lib/server/print';
 import { text, type RequestHandler } from '@sveltejs/kit';
 import { printerConfigs } from '$lib/server/print/printers';
-import { mmToPixels } from '$lib/server/dpiUtils';
+import { mmToPixels } from '$lib/dpiUtils';
 import { imageToZpl, pdfToImage } from '$lib/server/image';
 
 export const GET: RequestHandler = async ({ url }) => {

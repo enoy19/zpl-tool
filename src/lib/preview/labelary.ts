@@ -1,5 +1,4 @@
-import { renderZpl } from '../render';
-import type { Density, Variables } from '../types';
+import type { Density } from '../types';
 
 export async function renderZplToPng(
 	zpl: string,

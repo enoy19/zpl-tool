@@ -85,20 +85,18 @@ function transformImageForPrinting(
 	rotation: number,
 	dpmm: number,
 	imageDimensions: Dimensions,
-	printDimensions: Dimensions,
+	printDimensions: Dimensions
 ) {
-	return (
-		imageMagick(input)
-			.rotate('#ffffff', rotation)
-			.transparent('#ffffff')
-			.density(dpmmToDpi(dpmm), dpmmToDpi(dpmm))
-			.resize(imageDimensions.width, imageDimensions.height, '!')
-			.gravity('Center')
-			.extent(printDimensions.width, printDimensions.height)
-			.negative()
-			.threshold(50, true)
-			.bitdepth(8)
-	);
+	return imageMagick(input)
+		.rotate('#ffffff', rotation)
+		.transparent('#ffffff')
+		.density(dpmmToDpi(dpmm), dpmmToDpi(dpmm))
+		.resize(imageDimensions.width, imageDimensions.height, '!')
+		.gravity('Center')
+		.extent(printDimensions.width, printDimensions.height)
+		.negative()
+		.threshold(50, true)
+		.bitdepth(8);
 }
 
 function convertToMonochromeBitBuffer(inputBuffer: Buffer): Buffer {

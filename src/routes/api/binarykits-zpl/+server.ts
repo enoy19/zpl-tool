@@ -3,12 +3,7 @@ import type { BinarykitsZplRequestBody } from '$lib/types';
 import { env } from '$env/dynamic/private';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const {
-		zpl,
-		dpmm,
-		width,
-		height,
-	}: BinarykitsZplRequestBody = await request.json();
+	const { zpl, dpmm, width, height }: BinarykitsZplRequestBody = await request.json();
 
 	const png = await renderZplToPng(zpl, dpmm, width, height);
 
@@ -33,7 +28,7 @@ async function renderZplToPng(
 		zplData: zpl,
 		printDensityDpmm: density,
 		labelWidth: width,
-		labelHeight: height,
+		labelHeight: height
 	});
 
 	const response = await fetch(`${env.SECRET_BINARYKITS_ZPL_BASE_URL}/api/v1/viewer`, {

@@ -4,9 +4,9 @@ export async function renderZplToPng(
 	zpl: string,
 	density: Density,
 	widthMillimeter: number,
-	heightMillimeter: number,
+	heightMillimeter: number
 ) {
-    const body: BinarykitsZplRequestBody = {
+	const body: BinarykitsZplRequestBody = {
 		zpl,
 		dpmm: parseInt(density.split('dpmm')[0]),
 		width: widthMillimeter,
@@ -19,10 +19,10 @@ export async function renderZplToPng(
 		body: JSON.stringify(body)
 	});
 
-    if(!response.ok) {
-        const responseText = await response.text();
-        throw new Error(`[${response.status}] Generating preview failed: ${responseText}`);
-    }
+	if (!response.ok) {
+		const responseText = await response.text();
+		throw new Error(`[${response.status}] Generating preview failed: ${responseText}`);
+	}
 
-    return response.arrayBuffer();
+	return response.arrayBuffer();
 }

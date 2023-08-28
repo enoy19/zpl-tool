@@ -23,7 +23,14 @@ export async function createEmptyJsonFileIfNotExists(dataPath: string) {
 	}
 }
 
-export async function writeDataFile(dataPath: string, data: string | NodeJS.ArrayBufferView | Iterable<string | NodeJS.ArrayBufferView> | AsyncIterable<string | NodeJS.ArrayBufferView>) {
+export async function writeDataFile(
+	dataPath: string,
+	data:
+		| string
+		| NodeJS.ArrayBufferView
+		| Iterable<string | NodeJS.ArrayBufferView>
+		| AsyncIterable<string | NodeJS.ArrayBufferView>
+) {
 	await fs.writeFile(getDataFilePathFor(dataPath), data);
 }
 

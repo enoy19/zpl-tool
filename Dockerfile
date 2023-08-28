@@ -18,7 +18,6 @@ ENV PROTOCOL_HEADER=x-forwarded-proto
 ENV HOST_HEADER=x-forwarded-host
 ENV SECRET_DATA_PATH=./data
 ENV TZ='Etc/UTC'
-ENV PUBLIC_PREVIEW_GENERATOR='binarykits-zpl'
 ENV SECRET_BINARYKITS_ZPL_BASE_URL='http://binarykits-zpl'
 
 RUN npm run build
@@ -44,7 +43,6 @@ ENV PROTOCOL_HEADER=x-forwarded-proto
 ENV HOST_HEADER=x-forwarded-host
 ENV SECRET_DATA_PATH=./data
 ENV TZ='Etc/UTC'
-ENV PUBLIC_PREVIEW_GENERATOR='binarykits-zpl'
 ENV SECRET_BINARYKITS_ZPL_BASE_URL='http://binarykits-zpl'
 
 CMD [ "node", "index.js" ]

@@ -3,6 +3,8 @@
 	import { fade } from 'svelte/transition';
 
 	export let renderPromise: Promise<string>;
+	export let widthPixel: number;
+	export let heightPixel: number;
 </script>
 
 {#await renderPromise}
@@ -15,7 +17,13 @@
 		/>
 	</div>
 {:then base64Img}
-	<img src={`data:image/png;base64, ${base64Img}`} alt="" />
+	<img
+		class="bg-white"
+		style:width={`${widthPixel}px`}
+		style:height={`${heightPixel}px`}
+		src={`data:image/png;base64, ${base64Img}`}
+		alt=""
+	/>
 {:catch e}
 	<aside transition:fade={{ duration: 200 }} class="alert variant-ghost-error">
 		<div class="alert-message">

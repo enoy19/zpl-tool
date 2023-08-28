@@ -2,19 +2,20 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import Preview from '$lib/components/Preview.svelte';
-	import VariableInputs from '$lib/components/VariableInputs.svelte';
-	import { renderZplToPngBase64 } from '$lib/preview';
-	import type { Variables } from '$lib/types';
-	import { slide } from 'svelte/transition';
-	import type { PageData } from './$types';
-	import { throttle } from 'throttle-debounce';
-	import { onMount } from 'svelte';
-	import { FileDropzone, toastStore } from '@skeletonlabs/skeleton';
-	import PrintButton from '$lib/components/PrintButton.svelte';
-	import type { ActionResult } from '@sveltejs/kit';
-	import { getVariableNames, renderZpl } from '$lib/render';
 	import PreviewController from '$lib/components/PreviewController.svelte';
-	import { autoRenderPreview } from '$lib/stores';
+	import PrintButton from '$lib/components/PrintButton.svelte';
+	import VariableInputs from '$lib/components/VariableInputs.svelte';
+	import { mmToPixels } from '$lib/dpiUtils';
+	import { renderZplToPngBase64 } from '$lib/preview';
+	import { getVariableNames, renderZpl } from '$lib/render';
+	import { autoRenderPreview, previewGenerator } from '$lib/stores';
+	import type { Variables } from '$lib/types';
+	import { FileDropzone, toastStore } from '@skeletonlabs/skeleton';
+	import type { ActionResult } from '@sveltejs/kit';
+	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	import { throttle } from 'throttle-debounce';
+	import type { PageData } from './$types';
 
 	export let data: PageData;
 	$: ({ templates, printers } = data);
@@ -28,6 +29,8 @@
 	let printing = false;
 
 	$: zpl = renderZpl(template.zpl, variables);
+	$: dpmm = parseInt(template.density.split('dpmm')[0]);
+	$: pixelSize = mmToPixels(dpmm, template.width, template.height);
 
 	for (const [key, value] of $page.url.searchParams.entries()) {
 		variables[key] = value;
@@ -39,6 +42,7 @@
 
 	function render() {
 		renderPromise = renderZplToPngBase64(
+			$previewGenerator,
 			template.zpl,
 			variables,
 			'8dpmm',
@@ -154,7 +158,7 @@
 			<div class="mb-3">
 				<PreviewController on:click={render} />
 			</div>
-			<Preview {renderPromise} />
+			<Preview widthPixel={pixelSize.width} heightPixel={pixelSize.height} {renderPromise} />
 		</div>
 	</div>
 </div>

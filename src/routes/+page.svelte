@@ -13,7 +13,7 @@
 	import { toastStore } from '@skeletonlabs/skeleton';
 	import { getVariableNames } from '$lib/render';
 	import PreviewController from '$lib/components/PreviewController.svelte';
-	import { autoRenderPreview } from '$lib/stores';
+	import { autoRenderPreview, previewGenerator } from '$lib/stores';
 	import { mmToPixels } from '$lib/dpiUtils';
 
 	export let data: PageData;
@@ -50,7 +50,7 @@
 	}
 
 	function render() {
-		renderPromise = renderZplToPngBase64(zpl, variables, '8dpmm', width, height);
+		renderPromise = renderZplToPngBase64($previewGenerator, zpl, variables, '8dpmm', width, height);
 	}
 
 	function loadTemplate(templateName: string) {
@@ -166,9 +166,7 @@
 			<div class="mb-3">
 				<PreviewController on:click={render} />
 			</div>
-			<div style:width={`${pixelSize.width}px`} style:height={`${pixelSize.height}px`} class="bg-white">
-				<Preview {renderPromise} />
-			</div>
+			<Preview widthPixel={pixelSize.width} heightPixel={pixelSize.height} {renderPromise} />
 		</div>
 	</div>
 </div>
