@@ -2,7 +2,7 @@
 
 zpl-tool is a webapp designed for managing multiple ZPL templates.
 It provides an easy-to-use interface for managing ZPL templates with the ability to insert variables such as `${MY_VARIABLE}` directly into your templates.
-zpl-tool features a live preview of the templates (powered by [labelary.com](https://labelary.com)), which automatically updates as you develop your template.
+zpl-tool features a live preview of the templates (powered by [labelary.com](https://labelary.com) and/or [BinaryKits.Zpl](https://github.com/BinaryKits/BinaryKits.Zpl) ), which automatically updates as you develop your template.
 
 Besides template management, zpl-tool also provides support for managing multiple printers, including serial and tcp network printers.
 
