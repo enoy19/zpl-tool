@@ -3,7 +3,7 @@
 	import { page } from '$app/stores';
 	import Preview from '$lib/components/Preview.svelte';
 	import VariableInputs from '$lib/components/VariableInputs.svelte';
-	import { renderZplToPngBase64 } from '$lib/labelary';
+	import { renderZplToPngBase64 } from '$lib/preview';
 	import type { Variables } from '$lib/types';
 	import { slide } from 'svelte/transition';
 	import type { PageData } from './$types';

@@ -38,3 +38,10 @@ export type PrinterConfig<T extends PrinterType> = {
 };
 
 export type PrinterConfigs = Record<string, PrinterConfig<PrinterType>>;
+
+export type BinarykitsZplRequestBody = {
+	zpl: string;
+	dpmm: number;
+	width: number;
+	height: number;
+};

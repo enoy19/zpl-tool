@@ -1,6 +1,6 @@
 import { convertPdfToImage } from './pdf';
 import { identify, imageMagick } from './imageMagick';
-import { dpmmToDpi } from './dpiUtils';
+import { dpmmToDpi } from '../dpiUtils';
 import { dev } from '$app/environment';
 import { mkdirIfNotExists, writeDataFile } from './fileUtil';
 

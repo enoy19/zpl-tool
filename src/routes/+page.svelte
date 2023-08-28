@@ -3,7 +3,7 @@
 	import Preview from '$lib/components/Preview.svelte';
 	import VariableInputs from '$lib/components/VariableInputs.svelte';
 	import { densities } from '$lib/constants';
-	import { renderZplToPngBase64 } from '$lib/labelary';
+	import { renderZplToPngBase64 } from '$lib/preview';
 	import type { Density, Variables } from '$lib/types';
 	import { slide } from 'svelte/transition';
 	import { throttle } from 'throttle-debounce';
@@ -14,6 +14,7 @@
 	import { getVariableNames } from '$lib/render';
 	import PreviewController from '$lib/components/PreviewController.svelte';
 	import { autoRenderPreview } from '$lib/stores';
+	import { mmToPixels } from '$lib/dpiUtils';
 
 	export let data: PageData;
 	$: ({ templates } = data);
@@ -28,6 +29,9 @@
 	let width = 100;
 	let height = 150;
 	let density: Density = '8dpmm';
+
+	$: dpmm = parseInt(density.split('dpmm')[0]);
+	$: pixelSize = mmToPixels(dpmm, width, height);
 
 	const debouncedRender = throttle(1000, render, {
 		noLeading: true
@@ -162,7 +166,9 @@
 			<div class="mb-3">
 				<PreviewController on:click={render} />
 			</div>
-			<Preview {renderPromise} />
+			<div style:width={`${pixelSize.width}px`} style:height={`${pixelSize.height}px`} class="bg-white">
+				<Preview {renderPromise} />
+			</div>
 		</div>
 	</div>
 </div>

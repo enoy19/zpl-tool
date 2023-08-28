@@ -9,3 +9,8 @@ services:
     #  - /dev/rfcomm0:/dev/rfcomm0
     volumes:
       - ./data:/app/data
+
+  binarykits-zpl:
+    image: ghcr.io/enoy19/binarykits-zpl:latest
+    ports:
+      - 7763:80
